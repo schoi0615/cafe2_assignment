@@ -8,109 +8,197 @@
     <style>
         .node { cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .node:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        .instance-btn { cursor: pointer; transition: all 0.2s; }
+        .instance-btn:hover { filter: brightness(0.9); transform: scale(1.02); }
     </style>
 </head>
 <body class="bg-amber-50 flex flex-col items-center justify-center min-h-screen p-5 font-sans">
 
     <h1 class="text-3xl font-bold mb-2 text-amber-900">카페 음료 객체 지향 시스템</h1>
-    <p class="text-amber-700 mb-10">클래스 노드를 클릭하여 다형성(오버라이딩) 결과를 확인해 보세요.</p>
+    <p class="text-amber-700 mb-8">클래스 노드나 하위의 세부 음료를 클릭하여 다형성 결과를 확인해 보세요.</p>
     
     <div class="flex flex-col items-center mb-10 w-full max-w-4xl">
-        <div id="beverage-node" class="node bg-amber-600 text-white px-8 py-4 rounded-xl mb-8 w-56 text-center text-xl font-semibold tracking-wide">
+        <div id="beverage-node" class="node bg-amber-600 text-white px-8 py-4 rounded-xl mb-6 w-56 text-center text-xl font-semibold tracking-wide">
             Beverage (Base)
         </div>
         
-        <div class="h-10 border-l-4 border-amber-300 mb-2"></div>
-        <div class="w-3/4 border-t-4 border-amber-300 mb-8"></div>
+        <div class="h-8 border-l-4 border-amber-300 mb-2"></div>
+        <div class="w-5/6 border-t-4 border-amber-300 mb-6"></div>
 
-        <div class="flex justify-between w-3/4 gap-4">
-            <div id="coffee-node" class="node bg-stone-700 text-white px-6 py-4 rounded-xl w-40 text-center font-medium">
-                Coffee
+        <div class="flex justify-between w-5/6 gap-4 items-start">
+            
+            <div class="flex flex-col items-center w-1/3">
+                <div id="coffee-node" class="node bg-stone-700 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
+                    Coffee Class
+                </div>
+                <div class="flex flex-col gap-2 w-full px-2">
+                    <button id="btn-americano" class="instance-btn bg-stone-200 text-stone-800 border border-stone-300 py-2 rounded-lg text-sm font-semibold shadow-sm">아메리카노</button>
+                    <button id="btn-vanilla" class="instance-btn bg-stone-200 text-stone-800 border border-stone-300 py-2 rounded-lg text-sm font-semibold shadow-sm">바닐라라떼</button>
+                </div>
             </div>
-            <div id="tea-node" class="node bg-emerald-600 text-white px-6 py-4 rounded-xl w-40 text-center font-medium">
-                Tea
+
+            <div class="flex flex-col items-center w-1/3">
+                <div id="tea-node" class="node bg-emerald-600 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
+                    Tea Class
+                </div>
+                <div class="flex flex-col gap-2 w-full px-2">
+                    <button id="btn-earlgrey" class="instance-btn bg-emerald-100 text-emerald-900 border border-emerald-300 py-2 rounded-lg text-sm font-semibold shadow-sm">얼그레이</button>
+                    <button id="btn-chamomile" class="instance-btn bg-emerald-100 text-emerald-900 border border-emerald-300 py-2 rounded-lg text-sm font-semibold shadow-sm">캐모마일</button>
+                </div>
             </div>
-            <div id="smoothie-node" class="node bg-orange-400 text-white px-6 py-4 rounded-xl w-40 text-center font-medium">
-                Smoothie
+
+            <div class="flex flex-col items-center w-1/3">
+                <div id="smoothie-node" class="node bg-orange-400 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
+                    Smoothie Class
+                </div>
+                <div class="flex flex-col gap-2 w-full px-2">
+                    <button id="btn-mango" class="instance-btn bg-orange-100 text-orange-900 border border-orange-300 py-2 rounded-lg text-sm font-semibold shadow-sm">망고스무디</button>
+                    <button id="btn-berry" class="instance-btn bg-orange-100 text-orange-900 border border-orange-300 py-2 rounded-lg text-sm font-semibold shadow-sm">베리스무디</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl border border-amber-100 text-left mb-10">
+        <h2 class="text-xl font-semibold mb-4 text-amber-900 text-center">객체 다형성 결과 확인 (메서드 호출)</h2>
+        
+        <div class="mb-4">
+            <span class="font-bold text-amber-800">선택된 객체 정보:</span>
+            <p id="info-log" class="text-gray-600 bg-gray-50 p-3 rounded-lg mt-1 border break-keep">원하는 음료 버튼을 클릭해 주세요.</p>
+        </div>
+
+        <div class="mb-4">
+            <span class="font-bold text-amber-800">제조 과정 (brew()):</span>
+            <p id="brew-log" class="text-gray-700 bg-amber-50 p-3 rounded-lg mt-1 border border-amber-100 min-h-[3rem] flex items-center break-keep">
+                -
+            </p>
+        </div>
+
+        <div>
+            <span class="font-bold text-amber-800">사이즈별 가격 (calculate_price()):</span>
+            <div id="price-log" class="grid grid-cols-3 gap-3 mt-1 text-center font-semibold text-gray-700">
+                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[S] - 원</div>
+                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[M] - 원</div>
+                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[L] - 원</div>
             </div>
         </div>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl text-center border border-amber-100">
-        <h2 class="text-xl font-semibold mb-4 text-amber-900">제조 과정 로그 (brew 메서드 호출)</h2>
-        <p id="output-log" class="text-lg text-gray-700 bg-amber-50/50 p-6 rounded-xl border border-amber-200 min-h-[5rem] flex items-center justify-center break-keep">
-            음료를 선택하면 제조 과정이 이곳에 출력됩니다.
-        </p>
-    </div>
-
     <script>
-        // 1. Base Class: Beverage 설계
+        // 1. Base Class: Beverage
         class Beverage {
+            static SIZE_MULTIPLIER = {"S": 0.8, "M": 1.0, "L": 1.3};
+
             constructor(name, basePrice, temperature = "HOT") {
-                this.name = name;
-                this.basePrice = basePrice;
-                this.temperature = temperature;
+                this._name = name;
+                this._basePrice = basePrice;
+                this._temperature = temperature;
             }
+
+            get name() { return this._name; }
+
             brew() {
-                return `[${this.temperature}] ${this.name}을(를) 기본 방식으로 제조합니다.`;
+                return `[${this._temperature}] ${this._name}을(를) 기본 방식으로 제조합니다.`;
+            }
+
+            calculate_price(size = "M") {
+                const multiplier = Beverage.SIZE_MULTIPLIER[size] || 1.0;
+                return Math.floor(this._basePrice * multiplier);
+            }
+
+            toString() {
+                return `${this._name} (${this._temperature}) - 기본가: ${this._basePrice}원`;
             }
         }
 
-        // 2. Sub Class: Coffee (오버라이딩)
+        // 2. Sub Class: Coffee
         class Coffee extends Beverage {
             constructor(name, basePrice, temperature = "HOT", shot = 2) {
                 super(name, basePrice, temperature);
-                this.shot = shot;
+                this.__shot = shot;
             }
+
             brew() {
-                return `[오버라이딩] [${this.temperature}] ${this.name}: 에스프레소 ${this.shot}샷 추출 후 물/우유를 추가합니다.`;
+                return `[오버라이딩] [${this._temperature}] ${this.name}: 에스프레소 ${this.__shot}샷 추출 후 물/우유를 추가합니다.`;
+            }
+
+            calculate_price(size = "M") {
+                const base = super.calculate_price(size);
+                const extraShotCost = Math.max(0, this.__shot - 2) * 500;
+                return base + extraShotCost;
             }
         }
 
-        // 3. Sub Class: Tea (오버라이딩)
+        // 3. Sub Class: Tea
         class Tea extends Beverage {
             constructor(name, basePrice, temperature = "HOT", steepMin = 3) {
                 super(name, basePrice, temperature);
-                this.steepMin = steepMin;
+                this.__steepMin = steepMin;
             }
+
             brew() {
-                return `[오버라이딩] [${this.temperature}] ${this.name}: 찻잎을 ${this.steepMin}분간 우려냅니다.`;
+                return `[오버라이딩] [${this._temperature}] ${this.name}: 찻잎을 ${this.__steepMin}분간 우려냅니다.`;
+            }
+
+            calculate_price(size = "M") {
+                return super.calculate_price(size);
             }
         }
 
-        // 4. Sub Class: Smoothie (오버라이딩)
+        // 4. Sub Class: Smoothie
         class Smoothie extends Beverage {
             constructor(name, basePrice, fruits) {
                 super(name, basePrice, "ICE");
-                this.fruits = fruits;
+                this.__fruits = fruits;
             }
+
             brew() {
-                const fruitList = this.fruits.join(", ");
-                return `[오버라이딩] [${this.temperature}] ${this.name}: ${fruitList}을(를) 블렌더로 갈아 제조합니다.`;
+                const fruitList = this.__fruits.join(", ");
+                return `[오버라이딩] [${this._temperature}] ${this.name}: ${fruitList}을(를) 블렌더로 갈아 제조합니다.`;
+            }
+
+            calculate_price(size = "M") {
+                const base = super.calculate_price(size);
+                const extraFruitCost = Math.max(0, this.__fruits.length - 2) * 300;
+                return base + extraFruitCost;
             }
         }
 
-        // 인스턴스 생성 (과제 1의 main.py 테스트 케이스 활용)
-        const baseBev = new Beverage("기본 음료", 3000);
-        const myCoffee = new Coffee("바닐라라떼", 5500, "ICE", 3);
-        const myTea = new Tea("얼그레이", 4000, "HOT", 4);
-        const mySmoothie = new Smoothie("베리스무디", 5500, ["딸기", "블루베리", "라즈베리"]);
+        // 인스턴스 데이터 준비
+        const baseBev = new Beverage("기본 음료", 3000, "HOT");
+        const americano = new Coffee("아메리카노", 4500, "HOT", 2);
+        const vanilla = new Coffee("바닐라라떼", 5500, "ICE", 3);
+        const earlgrey = new Tea("얼그레이", 4000, "HOT", 4);
+        const chamomile = new Tea("캐모마일", 4000, "ICE", 5);
+        const mango = new Smoothie("망고스무디", 5000, ["망고", "바나나"]);
+        const berry = new Smoothie("베리스무디", 5500, ["딸기", "블루베리", "라즈베리"]);
 
-        const outputLog = document.getElementById("output-log");
+        // UI 업데이트 함수
+        function updateDisplay(instance) {
+            document.getElementById("info-log").innerText = instance.toString();
+            document.getElementById("brew-log").innerText = instance.brew();
+            
+            const sizes = ["S", "M", "L"];
+            const priceNodes = document.getElementById("price-log").children;
+            sizes.forEach((size, index) => {
+                priceNodes[index].innerText = `[${size}] ${instance.calculate_price(size)}원`;
+            });
+        }
 
-        // 클릭 이벤트 연동 (다형성 작동 시각화)
-        document.getElementById("beverage-node").addEventListener("click", () => {
-            outputLog.innerText = baseBev.brew();
-        });
-        document.getElementById("coffee-node").addEventListener("click", () => {
-            outputLog.innerText = myCoffee.brew();
-        });
-        document.getElementById("tea-node").addEventListener("click", () => {
-            outputLog.innerText = myTea.brew();
-        });
-        document.getElementById("smoothie-node").addEventListener("click", () => {
-            outputLog.innerText = mySmoothie.brew();
-        });
+        // 클래스 노드 클릭 이벤트 (기본 대표값 출력)
+        document.getElementById("beverage-node").addEventListener("click", () => updateDisplay(baseBev));
+        document.getElementById("coffee-node").addEventListener("click", () => updateDisplay(americano));
+        document.getElementById("tea-node").addEventListener("click", () => updateDisplay(earlgrey));
+        document.getElementById("smoothie-node").addEventListener("click", () => updateDisplay(mango));
+
+        // 세부 인스턴스 버튼 클릭 이벤트
+        document.getElementById("btn-americano").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(americano); });
+        document.getElementById("btn-vanilla").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(vanilla); });
+        document.getElementById("btn-earlgrey").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(earlgrey); });
+        document.getElementById("btn-chamomile").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(chamomile); });
+        document.getElementById("btn-mango").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(mango); });
+        document.getElementById("btn-berry").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(berry); });
     </script>
 </body>
 </html>
