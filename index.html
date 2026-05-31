@@ -117,7 +117,7 @@
                 </div>
 
                 <div>
-                    <label class="text-xs font-bold text-stone-400 block mb-2">SIZE OPTIONS (Beverage 기본 다형성 적용)</label>
+                    <label class="text-xs font-bold text-stone-400 block mb-2">SIZE OPTIONS</label>
                     <div class="flex gap-2">
                         <button id="modal-size-S" onclick="setSize('S')" class="flex-1 py-2 rounded-xl text-xs font-bold border transition-all">S (0.8x)</button>
                         <button id="modal-size-M" onclick="setSize('M')" class="flex-1 py-2 rounded-xl text-xs font-bold border transition-all">M (1.0x)</button>
@@ -171,16 +171,18 @@
         }
 
         class Coffee extends Beverage {
-            constructor(name, basePrice, temperature = "HOT", shot = 2) {
+            constructor(name, basePrice, temperature = "HOT", shot = 2, liquid = "물") {
                 super(name, basePrice, temperature);
                 this._shot = shot;
+                this._liquid = liquid;
             }
 
             get shot() { return this._shot; }
             set shot(val) { this._shot = val; }
+            get liquid() { return this._liquid; }
 
             brew() {
-                return `[${this._temperature}] ${this.name}: 에스프레소 ${this._shot}샷 추출 후 물/우유를 추가합니다.`;
+                return `[${this._temperature}] ${this.name}: 에스프레소 ${this._shot}샷 추출 후 ${this._liquid}을(를) 추가합니다.`;
             }
 
             calculate_price(size = "M") {
@@ -229,8 +231,8 @@
         }
 
         const menuData = [
-            { id: 'ame', type: 'Coffee', name: '아메리카노', price: 4500, temp: 'HOT', shot: 2, icon: '☕' },
-            { id: 'vanilla', type: 'Coffee', name: '바닐라라떼', price: 5500, temp: 'ICE', shot: 3, icon: '🥤' },
+            { id: 'ame', type: 'Coffee', name: '아메리카노', price: 4500, temp: 'HOT', shot: 2, liquid: '물', icon: '☕' },
+            { id: 'latte', type: 'Coffee', name: '카페라떼', price: 5500, temp: 'ICE', shot: 3, liquid: '우유', icon: '🥤' },
             { id: 'earl', type: 'Tea', name: '얼그레이', price: 4000, temp: 'HOT', steepMin: 4, icon: '🫖' },
             { id: 'chamo', type: 'Tea', name: '캐모마일', price: 4000, temp: 'ICE', steepMin: 5, icon: '🍵' },
             { id: 'mango', type: 'Smoothie', name: '망고스무디', price: 5000, temp: 'ICE', fruits: ['망고', '바나나'], icon: '🥭' },
@@ -299,7 +301,7 @@
             highlightDiagramNode(item.type);
             
             if (item.type === 'Coffee') {
-                workingInstance = new Coffee(item.name, item.price, item.temp, item.shot);
+                workingInstance = new Coffee(item.name, item.price, item.temp, item.shot, item.liquid);
             } else if (item.type === 'Tea') {
                 workingInstance = new Tea(item.name, item.price, item.temp, item.steepMin);
             } else if (item.type === 'Smoothie') {
@@ -368,7 +370,7 @@
 
             if (selectedItem.type === 'Coffee') {
                 container.innerHTML = `
-                    <label class="text-xs font-bold text-stone-400 block mb-2">SHOT OPTION (Coffee 오버라이딩 적용)</label>
+                    <label class="text-xs font-bold text-stone-400 block mb-2">SHOT OPTION</label>
                     <div class="flex items-center justify-between bg-stone-50 p-3 rounded-xl border border-stone-200">
                         <span class="text-sm font-medium text-stone-700">에스프레소 샷 추가 (+500원, 3샷부터 비용 발생)</span>
                         <div class="flex items-center gap-3">
@@ -391,7 +393,7 @@
                     `;
                 });
                 container.innerHTML = `
-                    <label class="text-xs font-bold text-stone-400 block mb-2">FRUIT TOPPING OPTIONS (Smoothie 오버라이딩 적용)</label>
+                    <label class="text-xs font-bold text-stone-400 block mb-2">FRUIT TOPPING OPTIONS</label>
                     <p class="text-[11px] text-stone-500 mb-2">* 3개째부터 과일 토핑 추가 비용 발생 (+300원)</p>
                     <div class="grid grid-cols-3 gap-2">${checkboxesHtml}</div>
                 `;
@@ -437,14 +439,14 @@
             
             if (selectedItem.type === 'Coffee') {
                 const extra = Math.max(0, workingInstance.shot - 2) * 500;
-                detailText += `2. [오버라이딩 로직] 추가 샷 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.shot}샷 - 2) * 500원 = +${extra}원\n`;
+                detailText += `2. 추가 샷 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.shot}샷 - 2) * 500원 = +${extra}원\n`;
                 detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
             } else if (selectedItem.type === 'Smoothie') {
                 const extra = Math.max(0, workingInstance.fruits.length - 2) * 300;
-                detailText += `2. [오버라이딩 로직] 추가 토핑 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.fruits.length}개 - 2) * 300원 = +${extra}원\n`;
+                detailText += `2. 추가 토핑 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.fruits.length}개 - 2) * 300원 = +${extra}원\n`;
                 detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
             } else {
-                detailText += `2. [오버라이딩 로직] 기본 운용 유지\n   -> 추가 옵션 비용 없음\n`;
+                detailText += `2. 기본 운용 유지\n   -> 추가 옵션 비용 없음\n`;
                 detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
             }
             document.getElementById('monitor-detail').innerText = detailText;
@@ -472,7 +474,7 @@
             `;
 
             document.getElementById('monitor-method').innerText = `${selectedItem.type}.brew() & calculate_price()`;
-            document.getElementById('monitor-detail').innerText = `[오버라이딩 제조 및 가격 계산 동적 실행 완료]\n\n최종 결제 금액: ${finalPrice}원\n리턴 결과:\n"${brewResultMessage}"`;
+            document.getElementById('monitor-detail').innerText = `[제조 및 가격 계산 동적 실행 완료]\n\n최종 결제 금액: ${finalPrice}원\n리턴 결과:\n"${brewResultMessage}"`;
 
             closeModal();
         }
