@@ -3,90 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OOP 다형성 시각화 - 카페 시스템</title>
+    <title>스마트 카페 주문 시스템 - OOP 시각화</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .node { cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .node:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
-        .instance-btn { cursor: pointer; transition: all 0.2s; }
-        .instance-btn:hover { filter: brightness(0.9); transform: scale(1.02); }
+        .interactive-node { transition: all 0.3s ease; }
+        .active-node { transform: scale(1.05); box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); border-width: 3px; }
+        .pulse-badge { animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
     </style>
 </head>
-<body class="bg-amber-50 flex flex-col items-center justify-center min-h-screen p-5 font-sans">
+<body class="bg-stone-100 min-h-screen text-stone-800 font-sans pb-12">
 
-    <h1 class="text-3xl font-bold mb-2 text-amber-900">카페 음료 객체 지향 시스템</h1>
-    <p class="text-amber-700 mb-8">클래스 노드나 하위의 세부 음료를 클릭하여 다형성 결과를 확인해 보세요.</p>
-    
-    <div class="flex flex-col items-center mb-10 w-full max-w-4xl">
-        <div id="beverage-node" class="node bg-amber-600 text-white px-8 py-4 rounded-xl mb-6 w-56 text-center text-xl font-semibold tracking-wide">
-            Beverage (Base)
-        </div>
+    <header class="bg-white border-b border-stone-200 py-6 text-center shadow-sm">
+        <h1 class="text-2xl font-bold text-stone-900 tracking-tight">CAFE SIREN ORDER (OOP Simulator)</h1>
+        <p class="text-sm text-stone-500 mt-1">객체 지향 설계 기반의 실시간 다형성 구동 웹앱</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div class="h-8 border-l-4 border-amber-300 mb-2"></div>
-        <div class="w-5/6 border-t-4 border-amber-300 mb-6"></div>
-
-        <div class="flex justify-between w-5/6 gap-4 items-start">
+        <div class="lg:col-span-2 flex flex-col gap-6">
             
-            <div class="flex flex-col items-center w-1/3">
-                <div id="coffee-node" class="node bg-stone-700 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
-                    Coffee Class
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200">
+                <h2 class="text-sm font-bold text-stone-400 tracking-wider uppercase mb-4">Class Inheritance Diagram</h2>
+                <div class="flex flex-col items-center py-2">
+                    <div id="node-Beverage" class="interactive-node bg-amber-700 text-white font-semibold px-6 py-3 rounded-xl border border-transparent text-center w-48 shadow-sm">
+                        Beverage (Base)
+                    </div>
+                    <div class="h-6 w-1 bg-stone-300"></div>
+                    <div class="w-3/4 h-1 bg-stone-300 rounded"></div>
+                    <div class="flex justify-between w-full mt-2 gap-2">
+                        <div id="node-Coffee" class="interactive-node bg-stone-700 text-white font-medium px-4 py-2.5 rounded-xl border border-transparent text-center flex-1 shadow-sm text-sm">
+                            Coffee (Sub)
+                        </div>
+                        <div id="node-Tea" class="interactive-node bg-emerald-700 text-white font-medium px-4 py-2.5 rounded-xl border border-transparent text-center flex-1 shadow-sm text-sm">
+                            Tea (Sub)
+                        </div>
+                        <div id="node-Smoothie" class="interactive-node bg-orange-500 text-white font-medium px-4 py-2.5 rounded-xl border border-transparent text-center flex-1 shadow-sm text-sm">
+                            Smoothie (Sub)
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-col gap-2 w-full px-2">
-                    <button id="btn-americano" class="instance-btn bg-stone-200 text-stone-800 border border-stone-300 py-2 rounded-lg text-sm font-semibold shadow-sm">아메리카노</button>
-                    <button id="btn-vanilla" class="instance-btn bg-stone-200 text-stone-800 border border-stone-300 py-2 rounded-lg text-sm font-semibold shadow-sm">바닐라라떼</button>
-                </div>
-            </div>
+            </section>
 
-            <div class="flex flex-col items-center w-1/3">
-                <div id="tea-node" class="node bg-emerald-600 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
-                    Tea Class
+            <section class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                <div class="flex border-b border-stone-200 bg-stone-50">
+                    <button onclick="switchCategory('all')" id="tab-all" class="flex-1 py-4 text-center font-semibold border-b-2 border-amber-700 text-amber-800 text-sm">전체 메뉴</button>
+                    <button onclick="switchCategory('Coffee')" id="tab-Coffee" class="flex-1 py-4 text-center font-semibold border-b-2 border-transparent text-stone-500 hover:text-stone-800 text-sm">커피</button>
+                    <button onclick="switchCategory('Tea')" id="tab-Tea" class="flex-1 py-4 text-center font-semibold border-b-2 border-transparent text-stone-500 hover:text-stone-800 text-sm">티</button>
+                    <button onclick="switchCategory('Smoothie')" id="tab-Smoothie" class="flex-1 py-4 text-center font-semibold border-b-2 border-transparent text-stone-500 hover:text-stone-800 text-sm">스무디</button>
                 </div>
-                <div class="flex flex-col gap-2 w-full px-2">
-                    <button id="btn-earlgrey" class="instance-btn bg-emerald-100 text-emerald-900 border border-emerald-300 py-2 rounded-lg text-sm font-semibold shadow-sm">얼그레이</button>
-                    <button id="btn-chamomile" class="instance-btn bg-emerald-100 text-emerald-900 border border-emerald-300 py-2 rounded-lg text-sm font-semibold shadow-sm">캐모마일</button>
-                </div>
-            </div>
 
-            <div class="flex flex-col items-center w-1/3">
-                <div id="smoothie-node" class="node bg-orange-400 text-white px-6 py-4 rounded-xl w-full text-center font-medium mb-3">
-                    Smoothie Class
+                <div id="menu-grid" class="p-6 grid grid-cols-2 gap-4 max-h-[480px] overflow-y-auto">
+                    </div>
+            </section>
+        </div>
+
+        <div class="flex flex-col gap-6">
+            
+            <section class="bg-zinc-900 text-zinc-100 p-6 rounded-2xl shadow-xl border border-zinc-800 flex flex-col justify-between min-h-[260px]">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-bold text-amber-500 tracking-wider uppercase">OOP Polymorphism Monitor</h2>
+                        <span id="monitor-badge" class="hidden bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded font-mono pulse-badge">OVERRIDDEN</span>
+                    </div>
+                    
+                    <div class="space-y-3 font-mono text-xs">
+                        <div>
+                            <span class="text-zinc-500">Active Object:</span>
+                            <p id="monitor-object" class="text-zinc-300 mt-0.5 font-sans text-sm">-</p>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500">Triggered Method:</span>
+                            <p id="monitor-method" class="text-emerald-400 mt-0.5 font-bold">-</p>
+                        </div>
+                        <div>
+                            <span class="text-zinc-500">Execution Detail:</span>
+                            <p id="monitor-detail" class="text-amber-300 mt-0.5 whitespace-pre-line font-sans leading-relaxed">-</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-col gap-2 w-full px-2">
-                    <button id="btn-mango" class="instance-btn bg-orange-100 text-orange-900 border border-orange-300 py-2 rounded-lg text-sm font-semibold shadow-sm">망고스무디</button>
-                    <button id="btn-berry" class="instance-btn bg-orange-100 text-orange-900 border border-orange-300 py-2 rounded-lg text-sm font-semibold shadow-sm">베리스무디</button>
+                <div class="border-t border-zinc-800 pt-3 mt-4 text-[11px] text-zinc-500 font-sans">
+                    * 객체의 타입에 따라 재정의된 메서드가 동적으로 호출됩니다.
                 </div>
+            </section>
+
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 flex-1 flex flex-col">
+                <h2 class="text-sm font-bold text-stone-400 tracking-wider uppercase mb-4">Virtual Kitchen Log</h2>
+                <div id="kitchen-display" class="flex-1 border border-dashed border-stone-200 rounded-xl bg-stone-50 flex flex-col items-center justify-center p-4 text-center">
+                    <div id="kitchen-icon" class="text-4xl mb-2 text-stone-300">☕</div>
+                    <p id="kitchen-text" class="text-sm text-stone-500 font-medium break-keep">음료를 선택하고 주문하기를 누르면 가상 주방에서 제조가 시작됩니다.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="option-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl border border-stone-100">
+            <div class="p-6 border-b border-stone-100 flex justify-between items-start">
+                <div>
+                    <span id="modal-category" class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Category</span>
+                    <h3 id="modal-title" class="text-xl font-bold text-stone-900 mt-1">음료 이름</h3>
+                </div>
+                <button onclick="closeModal()" class="text-stone-400 hover:text-stone-600 font-bold text-xl">&times;</button>
             </div>
             
-        </div>
-    </div>
+            <div class="p-6 space-y-6 max-h-[400px] overflow-y-auto">
+                <div>
+                    <label class="text-xs font-bold text-stone-400 block mb-2">TEMPERATURE</label>
+                    <div class="flex gap-2">
+                        <button id="modal-temp-HOT" onclick="setTemp('HOT')" class="flex-1 py-2.5 rounded-xl font-semibold text-sm border transition-all">HOT</button>
+                        <button id="modal-temp-ICE" onclick="setTemp('ICE')" class="flex-1 py-2.5 rounded-xl font-semibold text-sm border transition-all">ICE</button>
+                    </div>
+                </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-lg w-full max-w-2xl border border-amber-100 text-left mb-10">
-        <h2 class="text-xl font-semibold mb-4 text-amber-900 text-center">객체 다형성 결과 확인 (메서드 호출)</h2>
-        
-        <div class="mb-4">
-            <span class="font-bold text-amber-800">선택된 객체 정보:</span>
-            <p id="info-log" class="text-gray-600 bg-gray-50 p-3 rounded-lg mt-1 border break-keep">원하는 음료 버튼을 클릭해 주세요.</p>
-        </div>
+                <div>
+                    <label class="text-xs font-bold text-stone-400 block mb-2">SIZE OPTIONS (Beverage 기본 다형성 적용)</label>
+                    <div class="flex gap-2">
+                        <button id="modal-size-S" onclick="setSize('S')" class="flex-1 py-2 rounded-xl text-xs font-bold border transition-all">S (0.8x)</button>
+                        <button id="modal-size-M" onclick="setSize('M')" class="flex-1 py-2 rounded-xl text-xs font-bold border transition-all">M (1.0x)</button>
+                        <button id="modal-size-L" onclick="setSize('L')" class="flex-1 py-2 rounded-xl text-xs font-bold border transition-all">L (1.3x)</button>
+                    </div>
+                </div>
 
-        <div class="mb-4">
-            <span class="font-bold text-amber-800">제조 과정 (brew()):</span>
-            <p id="brew-log" class="text-gray-700 bg-amber-50 p-3 rounded-lg mt-1 border border-amber-100 min-h-[3rem] flex items-center break-keep">
-                -
-            </p>
-        </div>
+                <div id="custom-options-container" class="border-t border-stone-100 pt-4">
+                    </div>
+            </div>
 
-        <div>
-            <span class="font-bold text-amber-800">사이즈별 가격 (calculate_price()):</span>
-            <div id="price-log" class="grid grid-cols-3 gap-3 mt-1 text-center font-semibold text-gray-700">
-                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[S] - 원</div>
-                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[M] - 원</div>
-                <div class="bg-gray-100 py-3 rounded-lg shadow-inner border border-gray-200">[L] - 원</div>
+            <div class="p-6 bg-stone-50 border-t border-stone-100 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-stone-400 block font-semibold">TOTAL PRICE</span>
+                    <span id="modal-price" class="text-xl font-extrabold text-stone-900">0원</span>
+                </div>
+                <button onclick="submitOrder()" class="bg-amber-700 hover:bg-amber-800 text-white font-bold px-6 py-3 rounded-xl shadow-sm text-sm tracking-wide transition-all">
+                    주문하기 (brew() 호출)
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. Base Class: Beverage
+        // 1. Base Class 정의 (beverage.py 핵심 구현 수용)
         class Beverage {
             static SIZE_MULTIPLIER = {"S": 0.8, "M": 1.0, "L": 1.3};
 
@@ -97,6 +156,9 @@
             }
 
             get name() { return this._name; }
+            get basePrice() { return this._basePrice; }
+            get temperature() { return this._temperature; }
+            set temperature(val) { this._temperature = val; }
 
             brew() {
                 return `[${this._temperature}] ${this._name}을(를) 기본 방식으로 제조합니다.`;
@@ -112,33 +174,33 @@
             }
         }
 
-        // 2. Sub Class: Coffee
+        // 2. Sub Class: Coffee 구현 (coffee.py 오버라이딩 수용)
         class Coffee extends Beverage {
             constructor(name, basePrice, temperature = "HOT", shot = 2) {
                 super(name, basePrice, temperature);
-                this.__shot = shot;
+                this.shot = shot;
             }
 
             brew() {
-                return `[오버라이딩] [${this._temperature}] ${this.name}: 에스프레소 ${this.__shot}샷 추출 후 물/우유를 추가합니다.`;
+                return `[${this._temperature}] ${this.name}: 에스프레소 ${this.shot}샷 추출 후 물/우유를 추가합니다.`;
             }
 
             calculate_price(size = "M") {
                 const base = super.calculate_price(size);
-                const extraShotCost = Math.max(0, this.__shot - 2) * 500;
+                const extraShotCost = Math.max(0, this.shot - 2) * 500;
                 return base + extraShotCost;
             }
         }
 
-        // 3. Sub Class: Tea
+        // 3. Sub Class: Tea 구현 (tea.py 오버라이딩 수용)
         class Tea extends Beverage {
             constructor(name, basePrice, temperature = "HOT", steepMin = 3) {
                 super(name, basePrice, temperature);
-                this.__steepMin = steepMin;
+                this.steepMin = steepMin;
             }
 
             brew() {
-                return `[오버라이딩] [${this._temperature}] ${this.name}: 찻잎을 ${this.__steepMin}분간 우려냅니다.`;
+                return `[${this._temperature}] ${this.name}: 찻잎을 ${this.steepMin}분간 우려냅니다.`;
             }
 
             calculate_price(size = "M") {
@@ -146,59 +208,285 @@
             }
         }
 
-        // 4. Sub Class: Smoothie
+        // 4. Sub Class: Smoothie 구현 (smoothie.py 오버라이딩 수용)
         class Smoothie extends Beverage {
-            constructor(name, basePrice, fruits) {
+            constructor(name, basePrice, fruits = []) {
                 super(name, basePrice, "ICE");
-                this.__fruits = fruits;
+                this.fruits = fruits;
             }
 
             brew() {
-                const fruitList = this.__fruits.join(", ");
-                return `[오버라이딩] [${this._temperature}] ${this.name}: ${fruitList}을(를) 블렌더로 갈아 제조합니다.`;
+                const fruitList = this.fruits.length > 0 ? this.fruits.join(", ") : "선택 없음";
+                return `[${this._temperature}] ${this.name}: ${fruitList}을(를) 블렌더로 갈아 제조합니다.`;
             }
 
             calculate_price(size = "M") {
                 const base = super.calculate_price(size);
-                const extraFruitCost = Math.max(0, this.__fruits.length - 2) * 300;
+                const extraFruitCost = Math.max(0, this.fruits.length - 2) * 300;
                 return base + extraFruitCost;
             }
         }
 
-        // 인스턴스 데이터 준비
-        const baseBev = new Beverage("기본 음료", 3000, "HOT");
-        const americano = new Coffee("아메리카노", 4500, "HOT", 2);
-        const vanilla = new Coffee("바닐라라떼", 5500, "ICE", 3);
-        const earlgrey = new Tea("얼그레이", 4000, "HOT", 4);
-        const chamomile = new Tea("캐모마일", 4000, "ICE", 5);
-        const mango = new Smoothie("망고스무디", 5000, ["망고", "바나나"]);
-        const berry = new Smoothie("베리스무디", 5500, ["딸기", "블루베리", "라즈베리"]);
+        // 키오스크 원본 데이터셋 세팅
+        const menuData = [
+            { id: 'ame', type: 'Coffee', name: '아메리카노', price: 4500, temp: 'HOT', shot: 2, icon: '☕' },
+            { id: 'vanilla', type: 'Coffee', name: '바닐라라떼', price: 5500, temp: 'ICE', shot: 3, icon: '🥤' },
+            { id: 'earl', type: 'Tea', name: '얼그레이', price: 4000, temp: 'HOT', steepMin: 4, icon: '🫖' },
+            { id: 'chamo', type: 'Tea', name: '캐모마일', price: 4000, temp: 'ICE', steepMin: 5, icon: '🍵' },
+            { id: 'mango', type: 'Smoothie', name: '망고스무디', price: 5000, temp: 'ICE', fruits: ['망고', '바나나'], icon: '🥭' },
+            { id: 'berry', type: 'Smoothie', name: '베리스무디', price: 5500, temp: 'ICE', fruits: ['딸기', '블루베리', '라즈베리'], icon: '🍓' }
+        ];
 
-        // UI 업데이트 함수
-        function updateDisplay(instance) {
-            document.getElementById("info-log").innerText = instance.toString();
-            document.getElementById("brew-log").innerText = instance.brew();
+        let currentActiveCategory = 'all';
+        let selectedItem = null;      // 현재 모달에 열린 메뉴 로우 데이터
+        let workingInstance = null;   // 실시간 계산용 OOP 다형성 객체 인스턴스
+        let selectedSize = 'M';
+
+        // 앱 초기화 구동
+        window.onload = () => {
+            renderMenuGrid('all');
+            highlightDiagramNode('Beverage');
+        };
+
+        // 다이어그램 강조 효과 초기화 기능
+        function highlightDiagramNode(className) {
+            ['Beverage', 'Coffee', 'Tea', 'Smoothie'].forEach(name => {
+                document.getElementById(`node-${name}`).classList.remove('active-node');
+            });
+            if(className) {
+                document.getElementById(`node-${className}`).classList.add('active-node');
+            }
+        }
+
+        // 카테고리 전환 UI 제어
+        function switchCategory(category) {
+            currentActiveCategory = category;
+            ['all', 'Coffee', 'Tea', 'Smoothie'].forEach(cat => {
+                const tab = document.getElementById(`tab-${cat}`);
+                if(cat === category) {
+                    tab.classList.add('border-amber-700', 'text-amber-800');
+                    tab.classList.remove('border-transparent', 'text-stone-500');
+                } else {
+                    tab.classList.remove('border-amber-700', 'text-amber-800');
+                    tab.classList.add('border-transparent', 'text-stone-500');
+                }
+            });
+            renderMenuGrid(category);
+            highlightDiagramNode(category === 'all' ? 'Beverage' : category);
+        }
+
+        // 메뉴 목록 그리드 그리기
+        function renderMenuGrid(category) {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
             
-            const sizes = ["S", "M", "L"];
-            const priceNodes = document.getElementById("price-log").children;
-            sizes.forEach((size, index) => {
-                priceNodes[index].innerText = `[${size}] ${instance.calculate_price(size)}원`;
+            const filtered = category === 'all' ? menuData : menuData.filter(item => item.type === category);
+            
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-stone-50 border border-stone-200 p-4 rounded-xl cursor-pointer hover:border-amber-500 hover:shadow-md transition-all flex flex-col items-center text-center';
+                card.onclick = () => openOptionModal(item);
+                card.innerHTML = `
+                    <div class="text-3xl mb-2">${item.icon}</div>
+                    <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">${item.type}</span>
+                    <h4 class="font-bold text-stone-900 text-sm mt-0.5">${item.name}</h4>
+                    <p class="text-xs text-stone-500 mt-1">${item.price}원</p>
+                `;
+                grid.appendChild(card);
             });
         }
 
-        // 클래스 노드 클릭 이벤트 (기본 대표값 출력)
-        document.getElementById("beverage-node").addEventListener("click", () => updateDisplay(baseBev));
-        document.getElementById("coffee-node").addEventListener("click", () => updateDisplay(americano));
-        document.getElementById("tea-node").addEventListener("click", () => updateDisplay(earlgrey));
-        document.getElementById("smoothie-node").addEventListener("click", () => updateDisplay(mango));
+        // 모달 팝업창 오픈 및 실시간 다형성 매핑 객체 바인딩
+        function openOptionModal(item) {
+            selectedItem = item;
+            selectedSize = 'M';
+            
+            highlightDiagramNode(item.type);
+            
+            // 타입에 따른 런타임 다형성 인스턴스 동적 생성 (캡슐화 및 생성자 연동)
+            if (item.type === 'Coffee') {
+                workingInstance = new Coffee(item.name, item.price, item.temp, item.shot);
+            } else if (item.type === 'Tea') {
+                workingInstance = new Tea(item.name, item.price, item.temp, item.single_underscore_or_double ? 0 : 4);
+            } else if (item.type === 'Smoothie') {
+                workingInstance = new Smoothie(item.name, item.price, [...item.fruits]);
+            }
 
-        // 세부 인스턴스 버튼 클릭 이벤트
-        document.getElementById("btn-americano").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(americano); });
-        document.getElementById("btn-vanilla").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(vanilla); });
-        document.getElementById("btn-earlgrey").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(earlgrey); });
-        document.getElementById("btn-chamomile").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(chamomile); });
-        document.getElementById("btn-mango").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(mango); });
-        document.getElementById("btn-berry").addEventListener("click", (e) => { e.stopPropagation(); updateDisplay(berry); });
+            document.getElementById('modal-category').innerText = item.type;
+            document.getElementById('modal-title').innerText = item.name;
+            
+            // UI 컴포넌트 렌더링 상태 동기화 업데이트
+            setTemp(workingInstance.temperature);
+            updateSizeButtons();
+            renderCustomOptions();
+            refreshRealtimePriceAndMonitor();
+
+            document.getElementById('option-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('option-modal').classList.add('hidden');
+            highlightDiagramNode(currentActiveCategory === 'all' ? 'Beverage' : currentActiveCategory);
+        }
+
+        // 온도 스위칭 선택 처리 (스무디 제약조건 로직 포함)
+        function setTemp(temp) {
+            if (selectedItem.type === 'Smoothie') {
+                // 스무디는 무조건 ICE만 허용하도록 UI 속성 제어 차단
+                document.getElementById('modal-temp-HOT').disabled = true;
+                document.getElementById('modal-temp-HOT').className = 'flex-1 py-2.5 rounded-xl text-xs font-bold border border-stone-200 bg-stone-100 text-stone-300 cursor-not-allowed';
+                document.getElementById('modal-temp-ICE').className = 'flex-1 py-2.5 rounded-xl text-xs font-bold border border-blue-500 bg-blue-50 text-blue-600';
+                workingInstance.temperature = 'ICE';
+                return;
+            }
+
+            document.getElementById('modal-temp-HOT').disabled = false;
+            document.getElementById('modal-temp-ICE').disabled = false;
+
+            if (temp === 'HOT') {
+                document.getElementById('modal-temp-HOT').className = 'flex-1 py-2.5 rounded-xl font-semibold text-sm border border-red-500 bg-red-50 text-red-600';
+                document.getElementById('modal-temp-ICE').className = 'flex-1 py-2.5 rounded-xl font-semibold text-sm border border-stone-200 bg-white text-stone-600 hover:bg-stone-50';
+            } else {
+                document.getElementById('modal-temp-HOT').className = 'flex-1 py-2.5 rounded-xl font-semibold text-sm border border-stone-200 bg-white text-stone-600 hover:bg-stone-50';
+                document.getElementById('modal-temp-ICE').className = 'flex-1 py-2.5 rounded-xl font-semibold text-sm border border-blue-500 bg-blue-50 text-blue-600';
+            }
+            workingInstance.temperature = temp;
+            refreshRealtimePriceAndMonitor();
+        }
+
+        // 사이즈 변경 스위칭
+        function setSize(size) {
+            selectedSize = size;
+            updateSizeButtons();
+            refreshRealtimePriceAndMonitor();
+        }
+
+        function updateSizeButtons() {
+            ['S', 'M', 'L'].forEach(s => {
+                const btn = document.getElementById(`modal-size-${s}`);
+                if (s === selectedSize) {
+                    btn.className = 'flex-1 py-2 rounded-xl text-xs font-bold border border-amber-600 bg-amber-50 text-amber-800';
+                } else {
+                    btn.className = 'flex-1 py-2 rounded-xl text-xs font-bold border border-stone-200 bg-white text-stone-600 hover:bg-stone-50';
+                }
+            });
+        }
+
+        // 카테고리별 동적 하위 옵션 컨트롤 패널 렌더링
+        function renderCustomOptions() {
+            const container = document.getElementById('custom-options-container');
+            container.innerHTML = '';
+
+            if (selectedItem.type === 'Coffee') {
+                container.innerHTML = `
+                    <label class="text-xs font-bold text-stone-400 block mb-2">SHOT OPTION (Coffee 오버라이딩 적용)</label>
+                    <div class="flex items-center justify-between bg-stone-50 p-3 rounded-xl border border-stone-200">
+                        <span class="text-sm font-medium text-stone-700">에스프레소 샷 추가 (+500원, 3샷부터 비용 발생)</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="adjustShot(-1)" class="w-8 h-8 rounded-lg bg-white border border-stone-300 font-bold text-stone-600 flex items-center justify-center hover:bg-stone-50 shadow-sm">-</button>
+                            <span id="shot-count-display" class="font-bold text-sm w-4 text-center">${workingInstance.shot}</span>
+                            <button onclick="adjustShot(1)" class="w-8 h-8 rounded-lg bg-white border border-stone-300 font-bold text-stone-600 flex items-center justify-center hover:bg-stone-50 shadow-sm">+</button>
+                        </div>
+                    </div>
+                `;
+            } else if (selectedItem.type === 'Smoothie') {
+                const allFruits = ['망고', '바나나', '딸기', '블루베리', '라즈베리'];
+                let checkboxesHtml = '';
+                allFruits.forEach(fruit => {
+                    const isChecked = workingInstance.fruits.includes(fruit) ? 'checked' : '';
+                    checkboxesHtml += `
+                        <label class="flex items-center gap-2 bg-white px-3 py-2 border border-stone-200 rounded-lg cursor-pointer text-xs font-medium hover:bg-stone-50 shadow-sm">
+                            <input type="checkbox" value="${fruit}" ${isChecked} onchange="toggleFruit(this)" class="accent-orange-500 rounded">
+                            <span>${fruit}</span>
+                        </label>
+                    `;
+                });
+                container.innerHTML = `
+                    <label class="text-xs font-bold text-stone-400 block mb-2">FRUIT TOPPING OPTIONS (Smoothie 오버라이딩 적용)</label>
+                    <p class="text-[11px] text-stone-500 mb-2">* 3개째부터 과일 토핑 추가 비용 발생 (+300원)</p>
+                    <div class="grid grid-cols-3 gap-2">${checkboxesHtml}</div>
+                `;
+            } else if (selectedItem.type === 'Tea') {
+                container.innerHTML = `
+                    <label class="text-xs font-bold text-stone-400 block mb-2">TEA BREW TIME OPTION</label>
+                    <div class="flex items-center justify-between bg-stone-50 p-3 rounded-xl border border-stone-200">
+                        <span class="text-sm font-medium text-stone-700">추출 시간 설정</span>
+                        <span class="font-mono font-bold text-emerald-600 text-sm">${workingInstance.steepMin}분 우리기</span>
+                    </div>
+                `;
+            }
+        }
+
+        // 샷 컨트롤 조정 처리
+        function adjustShot(amount) {
+            const newShot = Math.max(1, workingInstance.shot + amount);
+            workingInstance.shot = newShot;
+            document.getElementById('shot-count-display').innerText = newShot;
+            refreshRealtimePriceAndMonitor();
+        }
+
+        // 과일 토핑 체크박스 컨트롤 스위칭 처리
+        function toggleFruit(checkbox) {
+            const fruit = checkbox.value;
+            if (checkbox.checked) {
+                if (!workingInstance.fruits.includes(fruit)) {
+                    workingInstance.fruits.push(fruit);
+                }
+            } else {
+                workingInstance.fruits = workingInstance.fruits.filter(f => f !== fruit);
+            }
+            refreshRealtimePriceAndMonitor();
+        }
+
+        // 실시간 가격 계산 및 블랙 컬러 다형성 모니터링 콘솔 연동 업데이트 (교수님 확인용 오버라이딩 시각화의 핵심)
+        function refreshRealtimePriceAndMonitor() {
+            // 하위 인스턴스 오버라이딩 가격 계산 실행 연동
+            const finalPrice = workingInstance.calculate_price(selectedSize);
+            document.getElementById('modal-price').innerText = `${finalPrice}원`;
+
+            // 검은색 모니터 영역 소스 분석 로그 출력 반영
+            document.getElementById('monitor-badge').classList.remove('hidden');
+            document.getElementById('monitor-object').innerText = workingInstance.toString();
+            document.getElementById('monitor-method').innerText = `${selectedItem.type}.calculate_price('${selectedSize}')`;
+
+            let detailText = `1. Beverage Base 계산가 반영\n   -> BasePrice(${workingInstance.basePrice}원) * SizeMultiplier(${selectedSize}) = ${Math.floor(workingInstance.basePrice * (Beverage.SIZE_MULTIPLIER[selectedSize] || 1.0))}원\n`;
+            
+            if (selectedItem.type === 'Coffee') {
+                const extra = Math.max(0, workingInstance.shot - 2) * 500;
+                detailText += `2. [오버라이딩 로직] 추가 샷 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.shot}샷 - 2) * 500원 = +${extra}원\n`;
+                detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
+            } else if (selectedItem.type === 'Smoothie') {
+                const extra = Math.max(0, workingInstance.fruits.length - 2) * 300;
+                detailText += `2. [오버라이딩 로직] 추가 토핑 연동 적용\n   -> 추가 비용: max(0, ${workingInstance.fruits.length}개 - 2) * 300원 = +${extra}원\n`;
+                detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
+            } else {
+                detailText += `2. [오버라이딩 로직] 기본 운용 유지\n   -> 추가 옵션 비용 없음\n`;
+                detailText += `3. 최종 산출 합산액: ${finalPrice}원`;
+            }
+            document.getElementById('monitor-detail').innerText = detailText;
+        }
+
+        // 주문하기 최종 이벤트 트리거 (brew() 메서드 오버라이딩 결과 확인)
+        function submitOrder() {
+            const brewResultMessage = workingInstance.brew();
+            
+            // 우측 가상 주방 UI 애니메이션 로그 출력 반영
+            const kitchenDisplay = document.getElementById('kitchen-display');
+            const kitchenIcon = document.getElementById('kitchen-icon');
+            const kitchenText = document.getElementById('kitchen-text');
+
+            // 테마 컴포넌트 컬러 연동 스위칭
+            kitchenDisplay.className = "flex-1 border border-amber-300 rounded-xl bg-amber-50/50 flex flex-col items-center justify-center p-4 text-center transition-all shadow-inner";
+            kitchenIcon.innerText = selectedItem.icon;
+            kitchenText.className = "text-sm text-stone-800 font-bold break-keep leading-relaxed";
+            kitchenText.innerHTML = `<span class="text-amber-700 bg-white border border-amber-200 text-xs px-2 py-0.5 rounded block w-max mx-auto mb-2 shadow-sm pulse-badge">주문 완료 (brew 호출)</span> ${brewResultMessage}`;
+
+            // 모니터 영역을 주문 모드로 변경 표기
+            document.getElementById('monitor-method').innerText = `${selectedItem.type}.brew()`;
+            document.getElementById('monitor-detail').innerText = `[오버라이딩 제조 메서드 동적 실행 완료]\n리턴 결과:\n"${brewResultMessage}"`;
+
+            closeModal();
+        }
     </script>
 </body>
 </html>
